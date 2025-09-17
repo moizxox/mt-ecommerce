@@ -3,7 +3,7 @@ import { getPayload } from "payload";
 import { Footer } from "./Footer";
 import { Navbar } from "./Navbar";
 import { SearchFilter } from "./search-filter";
-import { Category } from "@payload-types";
+import { Category } from "@/payload-types";
 
 interface Props {
   children: React.ReactNode;
@@ -24,18 +24,21 @@ const layout = async ({ children }: Props) => {
     },
   });
 
-  const formattedData = data.docs.map((doc)=>{
+  const formattedData = data.docs.map((doc) => ({
     ...doc,
-    subCategories: (doc.subcategories?.docs || []).map((doc)=>{
-      // Cause we are using depth that why defining the type
+    subcategories: (doc.subcategories?.docs ?? []).map((doc) => ({
+      // Because of "depth: 1" we are confident "doc" will be a type of "Category"
       ...(doc as Category),
-    })
-  })
-  console.log(data,formattedData);
+      subcategories: undefined,
+    })),
+  }));
+
+  console.log(data, formattedData);
+
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
-      <SearchFilter data={data} />
+      <SearchFilter data={formattedData} />
       <main className="flex-1 bg-[#f4f4f0]">{children}</main>
       <Footer />
     </div>

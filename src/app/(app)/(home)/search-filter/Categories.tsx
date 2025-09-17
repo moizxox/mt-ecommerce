@@ -3,5 +3,5 @@ interface Props {
 }
 
 export const Categories = ({ data }: Props) => {
-  return <div>Categories</div>;
+  return <div>Categories: {JSON.stringify(data, null, 2)}</div>;
 };
